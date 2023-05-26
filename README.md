@@ -1,6 +1,7 @@
 # DSLogger
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 ## Getting started
@@ -94,3 +95,6 @@ If you have run out of energy or time for your project, put a note at the top of
 =======
 A description of this package.
 >>>>>>> 7cc522d (Initial Commit)
+=======
+Yet another logging sdk in swift
+>>>>>>> 4087898 (fist commit as a package)

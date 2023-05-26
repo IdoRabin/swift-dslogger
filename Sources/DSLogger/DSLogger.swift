@@ -68,7 +68,7 @@ public final class DSLogger {
     /// - Returns: self instance of DSLogger for convenient chaining on init
     /// Example:
     /// fileprivate let dlog : DSLogger? = DLog.forClass("MyClass")?.setting(verbose: true)
-    func setting(verbose:Bool = false)->DSLogger {
+    public func setting(verbose:Bool = false)->DSLogger {
         self.isVerboseAllowed = verbose
         return self
     }

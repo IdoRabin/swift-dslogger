@@ -609,17 +609,17 @@ public enum DLog : String {
     }
     
     // MARK: Indents
-    static func indentedBlock(logger:DSLogger?, _ block:()->Void) {
+    public static func indentedBlock(logger:DSLogger?, _ block:()->Void) {
         logger?.indentLevel += 1
         block()
         logger?.indentLevel -= 1
     }
     
-    static func indentStart(logger:DSLogger?) {
+    public static func indentStart(logger:DSLogger?) {
         logger?.indentLevel += 1
     }
     
-    static func indentEnd(logger:DSLogger?) {
+    public static func indentEnd(logger:DSLogger?) {
         logger?.indentLevel -= 1
     }
 }

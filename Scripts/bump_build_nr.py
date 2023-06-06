@@ -12,17 +12,14 @@ import re
 import sys
 import os
 import fileinput
+import argparse
 from tempfile import NamedTemporaryFile
 
 # globals
-FILEPATH: str = '/Users/syncme/xcode/DSLogger/Sources/DSLogger/Version.swift'
+FILEPATH: str = '/../Version.swift'
 regex: re.Pattern = r'\b.{0,40}BUILD_NR\s{0,2}:\s{0,2}Int\s{0,2}=\s{0,2}(?P<version_int>\d+)\b'
 print('= bump_build_nr.py is starting: =')
 regex_key = 'version_int'
-
-if not os.path.isfile(FILEPATH):
-    print(f'❌ bump_build_nr.py failed finding FILEPATH - please correct the path: {FILEPATH}')
-
 
 def incrementLastInt(line: str, addInt: int) -> str:
     global regex
@@ -53,19 +50,34 @@ def processfile(filepath: str):
     # open Version file
     
     temp_file_name = ''
-    with open(FILEPATH, mode='r+', encoding='utf-8') as f:
+    with open(filepath, mode='r+', encoding='utf-8') as f:
         with NamedTemporaryFile(delete=False, mode='w+', encoding='utf-8') as fout:
             temp_file_name = fout.name
             for aline in f:
                 newline = incrementLastInt(aline, +1)
                 fout.write(newline)
 
-    os.rename(temp_file_name, FILEPATH)
-    print(f'✅  {FILEPATH} was successfully updated')
-
+    os.rename(temp_file_name, filepath)
+    print(f'✅  {filepath} was successfully updated')
 
 # main run:
-processfile(FILEPATH)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        prog='Bump', 
+        description='Bumps build number or version by finding files with lines where the apps\' version appears using regexes, and bumping the version. Saves a valid version in all the needed locations. User may explicitly specify the root dir for the search (-p / -path arguments) or we are assuming the search should start one folder above the "current" run folder',
+        epilog='Thanks')
+    
+    parser.add_argument('-b', '--base_folder', required=False, default='', type=str, help='The base - root folder to start the search')
+    
+    args = parser.parse_args()
+    path = FILEPATH
+    if args.base_folder is not None and len(args.base_folder) > 0:
+        print(f'== base path argument: {path}')
+        path = args.base_folder
+    if os.path.isfile(path):
+        processfile(path)
+    else:
+        print(f'❌ bump_build_nr.py failed finding path - please correct the path: {path}')
 
 # TODO:
 # git tag 1.2.3

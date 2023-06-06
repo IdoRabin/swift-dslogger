@@ -16,7 +16,7 @@ enum PreRelease: String {
 let DSLOGGER_NAME_STR : String = "DSLogger"
 
 // String fields allow only alphanumerics and a hyphen (-)
-let DSLOGGER_BUILD_NR : Int = 6
+let DSLOGGER_BUILD_NR : Int = 16
 let DSLOGGER_BUILD_VERSION = DSLoggerSemver (
     major: 0,
     minor: 1,

@@ -356,11 +356,11 @@ public final class DSLogger {
     /// Will first log and only then raise the precondition failure
     ///
     /// - Parameter items: Items to log.
-    public func raisePreconditionFailure(_ items: @autoclosure ()->String) {
+    public func raisePreconditionFailure(_ items: @autoclosure ()->String) -> Never {
         if (!isShouldSurpressLog(level:.raisePrecondition , string: items())) {
             println("❌ \(items())")
-            preconditionFailure("DLog.fatal: \(items())")
         }
+        preconditionFailure("DLog.fatal: \(items())")
     }
     
     

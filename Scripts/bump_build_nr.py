@@ -3,7 +3,7 @@
 # bump_build_nr.py
 # Bumps build version to an APP_VERSION file containing hard-coded SemVer 2.0 struct definition:
 # Ido Rabin @ Sept 2022
-# python3
+# python3 .
 
 from typing import List, Tuple, Optional
 import fileinput

@@ -24,10 +24,23 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "DSLogger",
-            dependencies: []),
+            dependencies: [],
+            swiftSettings: [
+                // Enables better optimizations when building in Release
+                .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release)),
+                
+                .define("PRODUCTION", .when(configuration: .release)),
+                .define("DEBUG", .when(configuration: .debug)),
+            ]),
         .testTarget(
             name: "DSLoggerTests",
-            dependencies: ["DSLogger"]),
+            dependencies: ["DSLogger"],
+            swiftSettings: [
+                .define("PRODUCTION", .when(configuration: .release)),
+                .define("DEBUG", .when(configuration: .debug)),
+                .define("TESTING")
+            ]
+        ),
     ],
     
     swiftLanguageVersions: [.v5]

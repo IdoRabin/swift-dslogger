@@ -30,6 +30,8 @@ public final class DSLogger {
     private static var filterOut:DLogFilterSet = [DLogLevel.verbose.rawValue] // When empty, all logs are output, otherwise, keys that are included are logged out
     private static var filterIn:DLogFilterSet = [] // When empty, all logs are output, otherwise, keys that are included are the only ones output - this takes precedence over filterOut
     private static var alwaysPrinted:[DLogLevel] = [.warning, .fail, .raisePrecondition, .note] // Will allow printing even when filtered out using filter
+    private static var _isTesting = false
+    private static var SEPERATOR = "|"
     
     // MARK: Private date stamp
     private static let dateFormatter = DateFormatter()
@@ -68,8 +70,16 @@ public final class DSLogger {
     /// - Returns: self instance of DSLogger for convenient chaining on init
     /// Example:
     /// fileprivate let dlog : DSLogger? = DLog.forClass("MyClass")?.setting(verbose: true)
-    public func setting(verbose:Bool = false)->DSLogger {
+    @discardableResult
+    public func setting(verbose:Bool = false, testing:Bool = false)->DSLogger {
         self.isVerboseAllowed = verbose
+        #if TESTING
+        Self._isTesting = true
+        #endif
+        Self._isTesting = testing // overrides flag
+        if Self._isTesting {
+            Self.SEPERATOR = "🏷️"
+        }
         return self
     }
     
@@ -241,9 +251,8 @@ public final class DSLogger {
     }
     
     // MARK: Private
-    
     private func logLineHeader()->String {
-        return DSLogger.dateFormatter.string(from: Date()) + " | [" + self.keys.joined(separator: ".") + "] "
+        return DSLogger.dateFormatter.string(from: Date()) + " \(Self.SEPERATOR) [" + self.keys.joined(separator: ".") + "] "
     }
     
     private func println(_ str: String) {
@@ -397,11 +406,17 @@ public final class DSLogger {
             case .todo: mark += "👁"
             case .raisePrecondition: mark += "❌"
             case .assertFailure: mark += "❌"
-            case .verbose:
-                mark = ""
-                break // adds nothing
+            case .verbose: mark += "|"
             }
-            if mark.count > 0 { mark = " " + mark + " |" }
+            
+        // Color emoji simple shapes: https://whatemoji.org/blog/emoji-color-series-circle-square-heart/
+//        📕: error message
+//        📙: warning message
+//        📗: ok status message
+//        📘: action message
+//        📓: canceled status message
+//        📔: Or anything you like and want to recognize immediately by color
+            if mark != " |" && mark.count > 0 { mark = " |" + mark }
             debugPrintln("▶ verbose\(mark) \(items)")
         }
     }
@@ -609,7 +624,13 @@ public enum DLog : String {
     }
     
     // MARK: Indents
-    public static func indentedBlock(logger:DSLogger?, _ block:()->Void) {
+    public static func indentedBlock(logger:DSLogger?, _ block:() throws ->Void) throws {
+        logger?.indentLevel += 1
+        try block()
+        logger?.indentLevel -= 1
+    }
+    
+    public static func indentedBlock(logger:DSLogger?, _ block:() ->Void) {
         logger?.indentLevel += 1
         block()
         logger?.indentLevel -= 1

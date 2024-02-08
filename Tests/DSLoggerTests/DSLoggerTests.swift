@@ -1,5 +1,5 @@
 import XCTest
-@testable import DSLogger
+@testable 
 
 final class DSLoggerTests: XCTestCase {
     

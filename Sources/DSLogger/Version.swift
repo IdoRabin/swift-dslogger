@@ -22,5 +22,5 @@ let DSLOGGER_BUILD_VERSION = DSLoggerSemver (
     minor: 1,
     patch: 0,
     prerelease: "\(PreRelease.alpha.rawValue)",
-    metadata: [String(format: "%04X", DSLOGGER_BUILD_NR)]
+    metadata: [String(format: "0x%04X", DSLOGGER_BUILD_NR)]
 )

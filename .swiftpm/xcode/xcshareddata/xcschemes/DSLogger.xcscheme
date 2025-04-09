@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "python3 /Users/syncme/xcode/DSLogger/Scripts/bump_build_nr.py -b /Users/syncme/xcode/DSLogger/Sources/DSLogger/Version.swift&#10;">
+               scriptText = "python3 /Users/ido/xcode/DSLogger/Scripts/bump_build_nr.py -b /Users/ido/xcode/DSLogger/Sources/DSLogger/Version.swift&#10;">
             </ActionContent>
          </ExecutionAction>
       </PreActions>

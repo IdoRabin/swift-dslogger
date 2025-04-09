@@ -425,6 +425,24 @@ public final class DSLogger {
     public var isVerboseActive : Bool {
         return self.isVerboseAllowed
     }
+    
+    public func onMainActor(log:DLogLevel, _ msg:@autoclosure ()->String) {
+        let msgStr = msg()
+        do { Task {
+            @MainActor in
+            switch log {
+            case .info: self.info(msgStr)
+            case .success: self.success(msgStr)
+            case .fail: self.fail(msgStr)
+            case .note: self.note(msgStr)
+            case .warning: self.warning(msgStr)
+            case .todo: self.todo(msgStr)
+            case .raisePrecondition: self.raisePreconditionFailure(msgStr)
+            case .assertFailure: self.raiseAssertFailure(msgStr)
+            case .verbose: self.warning(msgStr)
+            }
+        } } // end of do
+    }
 }
 
 /// Logger utility for swift
